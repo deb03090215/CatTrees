@@ -14,9 +14,8 @@ This Shiny application, **CatTrees**, is designed for analyzing and visualizing 
 ---
 
 ## Prerequisites
-Ensure the following are installed in your R environment:
-- Required R packages: 
-  - `shiny`, `shinydashboard`, `ggplot2`, `ggtree`, `plotly`, `phytools`, `treeio`, `phangorn`, `dplyr`, `tidyverse`, `highcharter`, and `shinyBS`.
+Ensure the following R packages are installed in your R environment:
+- `shiny`, `shinydashboard`, `ggplot2`, `ggtree`, `plotly`, `phytools`, `treeio`, `phangorn`, `dplyr`, `tidyverse`, `highcharter`, and `shinyBS`.
 
 ---
 
