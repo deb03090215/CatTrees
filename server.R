@@ -54,6 +54,10 @@ shinyServer(function(input, output) {
       cl <- clade()
       combined_tree <- ggtree(x) %<+% cl + 
         geom_tippoint(aes(color = Clade), size = input$p, shape = 15)
+
+      # Highlight clades with specific color
+      # cols <- c("6B.1" = "#F7A072", "6B.1A.5a" = "#DFBEE0", "6B.1A.5a.1" = "#55BB6D", "re6B.1A.5a.1" = "#94DF5D", "6B.1A.5a.2" = "#2F6EBA", "6B.1A.5a.2a" = "#6FAEE9", "6B.1A.5a.2a.1" = "#8841F6",  "6B.1A.5b" = "#F06C9B")
+      # p <- ggtree(x) %<+% cl + geom_tippoint(aes(color=Clade), size=input$p, shape=15) + scale_colour_manual(values = cols)
       
       infor[[1]] <- combined_tree
       df[[1]] <- infor[[1]]$data
