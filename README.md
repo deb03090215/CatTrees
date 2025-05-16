@@ -41,6 +41,13 @@ Ensure the following R packages are installed in your R environment:
 ---
 
 ## Running the App
+Option 1: Use Online Version
+You can access the app directly via web browser:
+https://5gi4j5-debbie-li.shinyapps.io/CatTrees/
+
+Note: The maximum file upload size is 512MB.
+
+Option 2: Run Locally in RStudio
 1. Open R or RStudio.
 2. Set your working directory to the folder containing `ui.R` and `server.R`.
 3. Run the following command:
