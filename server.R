@@ -1,7 +1,38 @@
 # Load required packages
-pacman::p_load(shiny, shinydashboard, ggplot2, ggtree, showtext, RColorBrewer, magrittr, tidytree, 
-               plotly, phytools, ape, treeio, phangorn, grid, gridExtra, dplyr, ggrepel, scales, 
-               dendextend, ggnewscale, shadowtext, highcharter, shinyjqui, tidyverse, Cairo)
+# Install Bioconductor packages if not present
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+BiocManager::install(c("ggtree", "treeio"), ask = FALSE)
+
+# Load packages
+library(shiny)
+library(shinydashboard)
+library(ggplot2)
+library(ggtree)
+library(RColorBrewer)
+library(magrittr)
+library(tidytree)
+library(plotly)
+library(phytools)
+library(ape)
+library(treeio)
+library(phangorn)
+library(grid)
+library(gridExtra)
+library(dplyr)
+library(ggrepel)
+library(scales)
+library(dendextend)
+library(ggnewscale)
+library(shadowtext)
+library(highcharter)
+library(shinyjqui)
+library(tidyverse)
+library(Cairo)
+library(rsconnect)
+
+# Allow a maximum upload size of 512 MB per request
+options(shiny.maxRequestSize = 512 * 1024^2)
 
 # Define Shiny server logic
 shinyServer(function(input, output) {
