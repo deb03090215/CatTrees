@@ -42,6 +42,7 @@ Ensure the following R packages are installed in your R environment:
 
 ## Running the App
 Option 1: Use Online Version
+
 You can access the app directly via web browser:
 https://5gi4j5-debbie-li.shinyapps.io/CatTrees/
 
