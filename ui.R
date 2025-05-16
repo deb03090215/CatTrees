@@ -1,5 +1,14 @@
 # Load required packages
-pacman::p_load(shiny, shinydashboard, plotly, highcharter, shinyjqui, grDevices, shinyBS)
+library(shiny)
+library(shinydashboard)
+library(plotly)
+library(highcharter)
+library(shinyjqui)
+library(grDevices)
+library(shinyBS)
+
+# Allow a maximum upload size of 512 MB per request
+options(shiny.maxRequestSize = 512 * 1024^2)
 
 # Define the dashboard sidebar
 sidebar <- dashboardSidebar(
