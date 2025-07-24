@@ -30,6 +30,7 @@ library(shinyjqui)
 library(tidyverse)
 library(Cairo)
 library(rsconnect)
+library(tools)
 
 # Allow a maximum upload size of 512 MB per request
 options(shiny.maxRequestSize = 512 * 1024^2)
@@ -83,17 +84,54 @@ shinyServer(function(input, output) {
       # Initialize the combined tree
       x <- tree()[[1]]
       cl <- clade()
-      combined_tree <- ggtree(x) %<+% cl + 
-        geom_tippoint(aes(color = Clade), size = input$p, shape = 15)
 
-      # Highlight clades with specific color
-      # cols <- c("6B.1" = "#F7A072", "6B.1A.5a" = "#DFBEE0", "6B.1A.5a.1" = "#55BB6D", "re6B.1A.5a.1" = "#94DF5D", "6B.1A.5a.2" = "#2F6EBA", "6B.1A.5a.2a" = "#6FAEE9", "6B.1A.5a.2a.1" = "#8841F6",  "6B.1A.5b" = "#F06C9B")
-      # p <- ggtree(x) %<+% cl + geom_tippoint(aes(color=Clade), size=input$p, shape=15) + scale_colour_manual(values = cols)
+      ### use default color code            
+      n_clades <- length(unique(cl$Clade))
+      colors <- rainbow(n_clades)  # 或使用其他色盤生成器
+      combined_tree <- ggtree(x) %<+% cl + 
+        geom_tippoint(aes(color = Clade), size = input$p, shape = 15)+
+        scale_color_manual(values = colors)
+      ###
+      
+      # ###---
+      # ### Highlight clades with specific color v2
+      # cl$Clade <- as.character(cl$Clade)
+      # #highlight_clades <- c("C.3", "C.5.1")
+      # #highlight_colors <- c("C.3" = "#e74c3c", "C.5.1"="#28b463")
+      # highlight_clades <- c("C.3", "C.5.7", "C.5.1")
+      # highlight_colors <- c("C.3" = "#e74c3c", "C.5.7"="#FFC300", "C.5.1"="#28b463")
+      # #highlight_clades <- c("C.3", "C.4")
+      # #highlight_colors <- c("C.3" = "#e74c3c", "C.4" = "#2e86c1")
+      # 
+      # ### get clades
+      # tree_tips <- tree()[[1]]$tip.label
+      # cl_tips <- cl[cl$label %in% tree_tips, ]
+      # all_clades <- unique(cl_tips$Clade)
+      # 
+      # ### gray for other clades
+      # other_clades <- setdiff(all_clades, highlight_clades)
+      # gray_colors <- setNames(rep("#D3D3D3", length(other_clades)), other_clades)
+      # 
+      # ### combine
+      # cols <- c(highlight_colors, gray_colors)
+      # 
+      # ### plot
+      # combined_tree <- ggtree(tree()[[1]]) %<+% cl +
+      #   geom_tippoint(aes(color = Clade), size = input$p, shape = 15) +
+      #   scale_color_manual(values = cols, breaks = highlight_clades)
+      # ###
+      # ###---
       
       infor[[1]] <- combined_tree
       df[[1]] <- infor[[1]]$data
-      label_pos <- max(df[[1]]$x) + input$distance
-      label_name <- input$file1$name[1]
+      
+      # label_pos <- max(df[[1]]$x) + input$distance
+      label_pos <- mean(range(df[[1]]$x, na.rm = TRUE))
+      
+      # label_name <- input$file1$name[1]
+      # use ?_? the second element for naming
+      # label_name <- map(strsplit(input$file1$name[1], split="_"),2)
+      label_name <- tools::file_path_sans_ext(strsplit(input$file1$name[1], "_")[[1]][2])
       
       # Append additional trees
       for (i in 2:length(tree())) {
@@ -106,19 +144,36 @@ shinyServer(function(input, output) {
         
         combined_tree <- combined_tree +
           geom_tree(data = df[[i]]) +
-          geom_tippoint(data = df[[i]], aes(color = Clade), size = input$p, shape = 15)
+          geom_tippoint(data = df[[i]], aes(color = Clade), size = input$p, shape = 15) 
+
+        # label_pos <- append(label_pos, max(df[[i]]$x) + input$distance)
+        label_pos <- append(label_pos, mean(range(df[[i]]$x, na.rm = TRUE)))
+        # just use file name
+        # label_name <- append(label_name, input$file1$name[i])
+        # use ?_? the second element for naming
+        label_name <- append(label_name, tools::file_path_sans_ext(strsplit(input$file1$name[i], "_")[[1]][2]))
         
-        label_pos <- append(label_pos, max(df[[i]]$x) + input$distance)
-        label_name <- append(label_name, input$file1$name[i])
+        # label_name <- append(label_name, map(strsplit(input$file1$name[i], split="_"),2))
         
         # Update progress
         incProgress(1 / length(tree()), detail = paste("Processing tree", i, "of", length(tree())))
       }
       
       # Annotate tree with file names
+
+      # 計算每棵樹最大 Y 值（tip 數）
+      label_y <- sapply(df, function(x) max(x$y, na.rm = TRUE)) + 20  # 加一點 padding
+            
       combined_tree <- combined_tree + 
-        annotate("text", x = label_pos, y = 70, label = label_name)
+        annotate("text", x = label_pos, y = label_y, label = label_name)+ coord_cartesian(clip = "off")+ theme(
+          legend.position = "right",
+          legend.justification = "center",
+          plot.margin = margin(t = 10, r = 10, b = 10, l = 10)
+        )
       
+#      combined_tree <- combined_tree + 
+#        annotate("text", x = label_pos-0.006, y = 2200, label = label_name)
+        
       # Highlight reassortment strains
       combined_df <- bind_rows(df) %>% filter(isTip == TRUE)
       r <- rst()

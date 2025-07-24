@@ -83,7 +83,7 @@ sidebar <- dashboardSidebar(
     menuItem("Settings", 
              icon = icon("tools"),
              sliderInput("distance", "Distance between trees",
-                         min = 0.000001, max = 1, value = 0.000001),
+                         min = 0.001, max = 1, value = 0.001),
              sliderInput("z", "Size of reassortant line",
                          min = 0.05, max = 1, value = 0.3),
              sliderInput("n", "Size of gray line",
@@ -117,7 +117,7 @@ body <- dashboardBody(
 
 # Define the dashboard header
 header <- dashboardHeader(
-  title = h4(HTML("CatTrees"), style = "font-size: 32px")
+  title = HTML('CatTrees')
 )
 
 # Assemble the dashboard page

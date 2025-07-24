@@ -1,0 +1,12 @@
+name: CatTrees
+title: CatTrees
+username: yngong
+account: yngong
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 14866466
+bundleId: 10383731
+url: https://yngong.shinyapps.io/CatTrees/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
