@@ -160,9 +160,7 @@ shinyServer(function(input, output) {
       }
       
       # Annotate tree with file names
-
-      # 計算每棵樹最大 Y 值（tip 數）
-      label_y <- sapply(df, function(x) max(x$y, na.rm = TRUE)) + 20  # 加一點 padding
+      label_y <- sapply(df, function(x) max(x$y, na.rm = TRUE)) + 20
             
       combined_tree <- combined_tree + 
         annotate("text", x = label_pos, y = label_y, label = label_name)+ coord_cartesian(clip = "off")+ theme(
